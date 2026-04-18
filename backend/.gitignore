@@ -1,0 +1,47 @@
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+*.log
+.vscode/
+.idea/
+*.iml
+
+# --- Env / secrets ---
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# --- Java / Maven / Spring Boot ---
+backend/target/
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/*.log
+backend/logs/
+backend/.classpath
+backend/.project
+backend/.settings/
+
+# --- Node / React / Vite ---
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.cache/
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+frontend/pnpm-debug.log*
+
+# --- Testing / coverage ---
+coverage/
+*.lcov
+
+# --- Cursor / local tooling ---
+.cursor/
+!.cursor/rules/
+!.cursor/rules/**
+
+# --- Optional local docs/assets generated during runs ---
+terminals/
+agent-transcripts/
+assets/
