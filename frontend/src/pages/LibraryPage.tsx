@@ -1,4 +1,5 @@
 import {
+  Alert,
   Button,
   LinearProgress,
   MenuItem,
@@ -33,11 +34,17 @@ export function LibraryPage() {
   const { user } = useAuth();
   const [rows, setRows] = useState<LibItem[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   async function load() {
     if (!user) return;
-    const { data } = await api.get<LibItem[]>(`/library/${user.userId}`);
-    setRows(data);
+    setError(null);
+    try {
+      const { data } = await api.get<LibItem[]>(`/library/${user.userId}`);
+      setRows(data);
+    } catch {
+      setError("Could not load your library.");
+    }
   }
 
   useEffect(() => {
@@ -52,12 +59,21 @@ export function LibraryPage() {
   }, [user]);
 
   async function updateProgress(row: LibItem, status: LibItem["status"], progressPercent: number) {
-    await api.put("/library/progress", {
-      libraryItemId: row.id,
-      status,
-      progressPercent,
-    });
-    await load();
+    const previous = rows;
+    // Optimistic update for a dynamic UX.
+    setRows((curr) =>
+      curr.map((r) => (r.id === row.id ? { ...r, status, progressPercent } : r))
+    );
+    try {
+      await api.put("/library/progress", {
+        libraryItemId: row.id,
+        status,
+        progressPercent,
+      });
+    } catch {
+      setRows(previous);
+      setError("Failed to update progress. Please retry.");
+    }
   }
 
   if (!user) return null;
@@ -66,6 +82,7 @@ export function LibraryPage() {
   return (
     <Stack spacing={2}>
       <Typography variant="h4">My library</Typography>
+      {error ? <Alert severity="error">{error}</Alert> : null}
       <Paper sx={{ overflow: "auto" }}>
         <Table size="small">
           <TableHead>

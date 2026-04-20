@@ -11,6 +11,7 @@ import com.rag.platform.util.ApiException;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
@@ -32,8 +33,12 @@ public class InteractionRecorderImpl implements InteractionRecorder {
     this.events = events;
   }
 
+  /**
+   * Uses REQUIRES_NEW so writes succeed even when invoked from {@code @Transactional(readOnly=true)}
+   * service methods (e.g. paper search/view).
+   */
   @Override
-  @Transactional
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
   public void record(Long userId, Long paperId, InteractionType type, String queryText) {
     User user = userRepository.findById(userId)
         .orElseThrow(() -> new ApiException(HttpStatus.NOT_FOUND, "User not found"));

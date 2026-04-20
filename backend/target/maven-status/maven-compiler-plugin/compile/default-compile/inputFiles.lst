@@ -9,6 +9,7 @@ C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\controller\Cit
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\controller\FeedbackController.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\controller\LibraryController.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\controller\PaperController.java
+C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\controller\RagController.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\controller\RecommendationController.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\admin\UsageReportResponse.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\admin\UserSummaryResponse.java
@@ -17,12 +18,16 @@ C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\auth\Login
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\auth\RegisterRequest.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\citation\CitationGenerateRequest.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\citation\CitationResponse.java
+C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\common\PagedResponse.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\feedback\FeedbackCreateRequest.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\library\LibraryAddRequest.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\library\LibraryItemResponse.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\library\LibraryProgressUpdateRequest.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\paper\PaperCreateRequest.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\paper\PaperResponse.java
+C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\rag\RagQueryRequest.java
+C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\rag\RagQueryResponse.java
+C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\rag\RagSourceResponse.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\dto\recommendation\RecommendationResponse.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\model\Citation.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\model\CitationFormat.java
@@ -65,6 +70,7 @@ C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\impl\C
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\impl\FeedbackServiceImpl.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\impl\LibraryServiceImpl.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\impl\PaperServiceImpl.java
+C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\impl\RagServiceImpl.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\impl\RecommendationServiceImpl.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\interaction\InteractionRecorder.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\interaction\InteractionRecorderImpl.java
@@ -73,6 +79,7 @@ C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\intera
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\LibraryService.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\PaperService.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\proxy\CachingRecommendationServiceProxy.java
+C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\RagService.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\recommendation\ContentBasedRecommendationStrategy.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\recommendation\RecommendationCandidate.java
 C:\Users\karan\Desktop\rag\backend\src\main\java\com\rag\platform\service\recommendation\RecommendationStrategy.java

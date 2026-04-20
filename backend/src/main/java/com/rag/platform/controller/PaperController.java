@@ -1,11 +1,11 @@
 package com.rag.platform.controller;
 
+import com.rag.platform.dto.common.PagedResponse;
 import com.rag.platform.dto.paper.PaperCreateRequest;
 import com.rag.platform.dto.paper.PaperResponse;
 import com.rag.platform.service.PaperService;
 import com.rag.platform.util.SecurityUtil;
 import jakarta.validation.Valid;
-import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -28,14 +28,16 @@ public class PaperController {
   }
 
   @GetMapping
-  public ResponseEntity<List<PaperResponse>> search(
+  public ResponseEntity<PagedResponse<PaperResponse>> search(
       @RequestParam(required = false) String q,
       @RequestParam(required = false) String domain,
       @RequestParam(required = false) Integer year,
-      @RequestParam(required = false) String author
+      @RequestParam(required = false) String author,
+      @RequestParam(defaultValue = "0") int page,
+      @RequestParam(defaultValue = "10") int size
   ) {
     Long actor = SecurityUtil.currentUserIdOrNull();
-    return ResponseEntity.ok(paperService.search(q, domain, year, author, actor));
+    return ResponseEntity.ok(paperService.search(q, domain, year, author, page, size, actor));
   }
 
   @GetMapping("/{id}")

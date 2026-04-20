@@ -51,40 +51,59 @@ public class DatabaseSeed {
         userRepository.save(u);
       }
 
-      if (paperRepository.count() == 0) {
-        paperRepository.save(new ResearchPaper(
-            "Attention Is All You Need",
-            "Vaswani et al.",
-            2017,
+      long paperCount = paperRepository.count();
+      if (paperCount < 300) {
+        String[] domains = {
             "Machine Learning",
-            "NeurIPS",
-            "10.5555/3295222.3295349",
-            "https://arxiv.org/abs/1706.03762",
-            "Transformer architecture for sequence modeling.",
-            "transformer, attention, nlp"
-        ));
-        paperRepository.save(new ResearchPaper(
-            "BERT: Pre-training of Deep Bidirectional Transformers",
-            "Devlin et al.",
-            2019,
             "Natural Language Processing",
-            "NAACL",
-            "10.18653/v1/N19-1423",
-            "https://arxiv.org/abs/1810.04805",
-            "Bidirectional encoder representations from transformers.",
-            "bert, language model, nlp"
-        ));
-        paperRepository.save(new ResearchPaper(
-            "Deep Residual Learning for Image Recognition",
-            "He et al.",
-            2016,
             "Computer Vision",
-            "CVPR",
-            "10.1109/CVPR.2016.90",
-            "https://arxiv.org/abs/1512.03385",
-            "Residual networks enable very deep CNN training.",
-            "resnet, deep learning, vision"
-        ));
+            "Data Mining",
+            "Software Engineering",
+            "Cyber Security",
+            "Cloud Computing",
+            "Distributed Systems",
+            "Information Retrieval",
+            "Human Computer Interaction"
+        };
+        String[] journals = {"NeurIPS", "ICML", "ACL", "EMNLP", "CVPR", "ICCV", "KDD", "IEEE Access", "ACM TOIS", "TSE"};
+        String[] keywordSets = {
+            "transformer, attention, deep learning",
+            "retrieval, ranking, search",
+            "security, anomaly detection, network",
+            "recommendation, personalization, behavior",
+            "software architecture, design pattern, maintainability",
+            "federated learning, privacy, optimization",
+            "graph neural network, embedding, prediction",
+            "cloud, autoscaling, orchestration",
+            "testing, reliability, quality assurance",
+            "nlp, summarization, language model"
+        };
+
+        int needed = (int) (300 - paperCount);
+        for (int i = 0; i < needed; i++) {
+          int idx = i % domains.length;
+          int jdx = i % journals.length;
+          int kdx = i % keywordSets.length;
+          int year = 2010 + (i % 16);
+          String title = "Research Study #" + (paperCount + i + 1) + " on " + domains[idx] + " Techniques";
+          String authors = "Author " + (char) ('A' + (i % 26)) + ". Kumar, Coauthor " + (char) ('A' + ((i + 7) % 26)) + ". Rao";
+          String doi = "10.1000/rag." + (paperCount + i + 1);
+          String url = "https://example.org/papers/" + (paperCount + i + 1);
+          String abstractText = "This paper presents a practical framework for " + domains[idx]
+              + " and evaluates performance trade-offs using real-world datasets and reproducible experiments.";
+
+          paperRepository.save(new ResearchPaper(
+              title,
+              authors,
+              year,
+              domains[idx],
+              journals[jdx],
+              doi,
+              url,
+              abstractText,
+              keywordSets[kdx]
+          ));
+        }
       }
     };
   }

@@ -10,7 +10,7 @@ import org.springframework.data.repository.query.Param;
 public interface RecommendationRepository extends JpaRepository<Recommendation, Long> {
   List<Recommendation> findTop20ByUserIdOrderByScoreDescCreatedAtDesc(Long userId);
 
-  @Modifying
+  @Modifying(clearAutomatically = true, flushAutomatically = true)
   @Query("DELETE FROM Recommendation r WHERE r.user.id = :userId")
   void deleteAllByUserId(@Param("userId") Long userId);
 }

@@ -1,4 +1,4 @@
-import { Box, LinearProgress, Paper, Stack, Typography } from "@mui/material";
+import { Alert, Box, Button, LinearProgress, Paper, Stack, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import api from "@/services/api";
@@ -18,17 +18,29 @@ export function RecommendationsPage() {
   const { user } = useAuth();
   const [items, setItems] = useState<Rec[]>([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  async function load() {
+    if (!user) return;
+    setLoading(true);
+    setError(null);
+    try {
+      const { data } = await api.get<Rec[]>(`/recommendations/${user.userId}`);
+      setItems(data);
+    } catch {
+      setError("Could not load recommendations right now.");
+    } finally {
+      setLoading(false);
+    }
+  }
 
   useEffect(() => {
-    if (!user) return;
-    void (async () => {
-      try {
-        const { data } = await api.get<Rec[]>(`/recommendations/${user.userId}`);
-        setItems(data);
-      } finally {
-        setLoading(false);
-      }
-    })();
+    void load();
+    const timer = window.setInterval(() => {
+      void load();
+    }, 30000);
+    return () => window.clearInterval(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
   if (!user) return null;
@@ -43,6 +55,12 @@ export function RecommendationsPage() {
       <Typography color="text.secondary">
         Scores combine domain and keyword overlap with your recent interactions.
       </Typography>
+      <Box>
+        <Button variant="outlined" size="small" onClick={() => void load()} disabled={loading}>
+          Refresh
+        </Button>
+      </Box>
+      {error ? <Alert severity="error">{error}</Alert> : null}
       {items.map((r) => (
         <Paper key={r.paperId} sx={{ p: 2 }}>
           <Typography variant="h6">{r.title}</Typography>

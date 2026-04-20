@@ -21,6 +21,7 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import AutoAwesomeRoundedIcon from "@mui/icons-material/AutoAwesomeRounded";
 import LibraryBooksRoundedIcon from "@mui/icons-material/LibraryBooksRounded";
 import AdminPanelSettingsRoundedIcon from "@mui/icons-material/AdminPanelSettingsRounded";
+import EditNoteRoundedIcon from "@mui/icons-material/EditNoteRounded";
 import { useState } from "react";
 import { Link as RouterLink, Outlet, useLocation } from "react-router-dom";
 import { useAuth } from "@/context/AuthContext";
@@ -33,14 +34,23 @@ export function ShellLayout() {
   const narrow = useMediaQuery(theme.breakpoints.down("md"));
   const [open, setOpen] = useState(false);
   const loc = useLocation();
+  const isAdmin = user?.roles.includes("ROLE_ADMIN") ?? false;
+  const isCurator = user?.roles.includes("ROLE_CURATOR") ?? false;
 
-  const nav = [
-    { to: "/", label: "Dashboard", icon: <DashboardRoundedIcon />, needAuth: true },
-    { to: "/search", label: "Search papers", icon: <SearchRoundedIcon />, needAuth: false },
-    { to: "/recommendations", label: "For you", icon: <AutoAwesomeRoundedIcon />, needAuth: true },
-    { to: "/library", label: "My library", icon: <LibraryBooksRoundedIcon />, needAuth: true },
-    { to: "/admin", label: "Admin", icon: <AdminPanelSettingsRoundedIcon />, needAuth: true, admin: true },
-  ];
+  const nav = isAdmin
+    ? [{ to: "/admin", label: "Admin", icon: <AdminPanelSettingsRoundedIcon />, needAuth: true }]
+    : isCurator
+        ? [
+            { to: "/", label: "Dashboard", icon: <DashboardRoundedIcon />, needAuth: true },
+            { to: "/curator/papers", label: "Manage papers", icon: <EditNoteRoundedIcon />, needAuth: true },
+            { to: "/search", label: "Search papers", icon: <SearchRoundedIcon />, needAuth: false },
+          ]
+        : [
+            { to: "/", label: "Dashboard", icon: <DashboardRoundedIcon />, needAuth: true },
+            { to: "/search", label: "Search papers", icon: <SearchRoundedIcon />, needAuth: false },
+            { to: "/recommendations", label: "For you", icon: <AutoAwesomeRoundedIcon />, needAuth: true },
+            { to: "/library", label: "My library", icon: <LibraryBooksRoundedIcon />, needAuth: true },
+          ];
 
   const drawer = (
     <Box sx={{ pt: 2, px: 1 }}>
@@ -57,11 +67,7 @@ export function ShellLayout() {
       </Box>
       <List>
         {nav
-          .filter((n) => {
-            if (n.admin && !user?.roles.includes("ROLE_ADMIN")) return false;
-            if (n.needAuth && !user) return false;
-            return true;
-          })
+          .filter((n) => !(n.needAuth && !user))
           .map((item) => (
             <ListItemButton
               key={item.to}

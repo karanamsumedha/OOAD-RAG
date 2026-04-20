@@ -1,18 +1,21 @@
 import {
+  Alert,
   Box,
   Button,
   Chip,
+  CircularProgress,
   Paper,
   Stack,
   Table,
   TableBody,
   TableCell,
   TableHead,
+  TablePagination,
   TableRow,
   TextField,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import { Link as RouterLink } from "react-router-dom";
 import api from "@/services/api";
 
@@ -29,26 +32,46 @@ export type Paper = {
   keywords: string;
 };
 
+type PagedResponse<T> = {
+  items: T[];
+  page: number;
+  size: number;
+  totalElements: number;
+  totalPages: number;
+};
+
 export function SearchPage() {
   const [q, setQ] = useState("");
   const [domain, setDomain] = useState("");
   const [year, setYear] = useState("");
   const [author, setAuthor] = useState("");
   const [rows, setRows] = useState<Paper[]>([]);
+  const [page, setPage] = useState(0);
+  const [size, setSize] = useState(10);
+  const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  async function run() {
+  async function run(nextPage = page, nextSize = size) {
     setLoading(true);
+    setError(null);
     try {
-      const { data } = await api.get<Paper[]>("/papers", {
+      const { data } = await api.get<PagedResponse<Paper>>("/papers", {
         params: {
           q: q || undefined,
           domain: domain || undefined,
           year: year ? Number(year) : undefined,
           author: author || undefined,
+          page: nextPage,
+          size: nextSize,
         },
       });
-      setRows(data);
+      setRows(data.items);
+      setPage(data.page);
+      setSize(data.size);
+      setTotal(data.totalElements);
+    } catch {
+      setError("Could not load papers. Please retry.");
     } finally {
       setLoading(false);
     }
@@ -58,6 +81,19 @@ export function SearchPage() {
     void run();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  function onSearchClick() {
+    void run(0, size);
+  }
+
+  function onPageChange(_: unknown, nextPage: number) {
+    void run(nextPage, size);
+  }
+
+  function onRowsPerPageChange(e: ChangeEvent<HTMLInputElement>) {
+    const nextSize = Number(e.target.value);
+    void run(0, nextSize);
+  }
 
   return (
     <Stack spacing={3}>
@@ -76,13 +112,23 @@ export function SearchPage() {
           <TextField label="Domain" value={domain} onChange={(e) => setDomain(e.target.value)} sx={{ flex: 1 }} />
           <TextField label="Year" value={year} onChange={(e) => setYear(e.target.value)} type="number" sx={{ width: 120 }} />
           <TextField label="Author contains" value={author} onChange={(e) => setAuthor(e.target.value)} sx={{ flex: 1 }} />
-          <Button variant="contained" onClick={() => void run()} disabled={loading} sx={{ minWidth: 140 }}>
-            {loading ? "Searching…" : "Search"}
+          <Button variant="contained" onClick={onSearchClick} disabled={loading} sx={{ minWidth: 140 }}>
+            {loading ? "Searching..." : "Search"}
           </Button>
         </Stack>
       </Paper>
 
+      {error ? <Alert severity="error">{error}</Alert> : null}
+
       <Paper sx={{ overflow: "auto" }}>
+        {loading ? (
+          <Box sx={{ p: 2, display: "flex", alignItems: "center", gap: 1 }}>
+            <CircularProgress size={18} />
+            <Typography variant="body2" color="text.secondary">
+              Loading papers...
+            </Typography>
+          </Box>
+        ) : null}
         <Table size="small">
           <TableHead>
             <TableRow>
@@ -124,6 +170,15 @@ export function SearchPage() {
             ) : null}
           </TableBody>
         </Table>
+        <TablePagination
+          component="div"
+          count={total}
+          page={page}
+          onPageChange={onPageChange}
+          rowsPerPage={size}
+          onRowsPerPageChange={onRowsPerPageChange}
+          rowsPerPageOptions={[10, 20, 50]}
+        />
       </Paper>
     </Stack>
   );

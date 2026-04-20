@@ -2,7 +2,10 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { ShellLayout } from "./components/ShellLayout";
 import { RequireAdmin } from "./components/RequireAdmin";
 import { RequireAuth } from "./components/RequireAuth";
+import { RequireCurator } from "./components/RequireCurator";
+import { RequireNonAdmin } from "./components/RequireNonAdmin";
 import { AdminPage } from "./pages/AdminPage";
+import { CuratorPapersPage } from "./pages/CuratorPapersPage";
 import { DashboardPage } from "./pages/DashboardPage";
 import { LibraryPage } from "./pages/LibraryPage";
 import { LoginPage } from "./pages/LoginPage";
@@ -18,13 +21,32 @@ export default function App() {
         <Route path="/" element={<DashboardPage />} />
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/search" element={<SearchPage />} />
+        <Route
+          path="/search"
+          element={
+            <RequireNonAdmin>
+              <SearchPage />
+            </RequireNonAdmin>
+          }
+        />
+        <Route
+          path="/curator/papers"
+          element={
+            <RequireAuth>
+              <RequireCurator>
+                <CuratorPapersPage />
+              </RequireCurator>
+            </RequireAuth>
+          }
+        />
         <Route path="/papers/:id" element={<PaperDetailPage />} />
         <Route
           path="/recommendations"
           element={
             <RequireAuth>
-              <RecommendationsPage />
+              <RequireNonAdmin>
+                <RecommendationsPage />
+              </RequireNonAdmin>
             </RequireAuth>
           }
         />
@@ -32,7 +54,9 @@ export default function App() {
           path="/library"
           element={
             <RequireAuth>
-              <LibraryPage />
+              <RequireNonAdmin>
+                <LibraryPage />
+              </RequireNonAdmin>
             </RequireAuth>
           }
         />
