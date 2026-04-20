@@ -56,7 +56,6 @@ com\rag\platform\dto\admin\UserSummaryResponse.class
 com\rag\platform\dto\rag\RagSourceResponse.class
 com\rag\platform\util\SecurityUtil.class
 com\rag\platform\service\recommendation\ContentBasedRecommendationStrategy.class
-com\rag\platform\config\DatabaseSeed.class
 com\rag\platform\dto\citation\CitationGenerateRequest.class
 com\rag\platform\dto\rag\RagQueryResponse.class
 com\rag\platform\service\external\CrossrefMetadataAdapter.class

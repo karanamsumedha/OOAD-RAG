@@ -16,7 +16,8 @@ spring:
     open-in-view: false
   sql:
     init:
-      mode: never
+      mode: always
+      data-locations: optional:file:./database.txt,optional:file:../database.txt
 
 app:
   security:
